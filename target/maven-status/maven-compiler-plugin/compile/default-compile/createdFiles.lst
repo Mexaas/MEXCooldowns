@@ -1,0 +1,6 @@
+org\axc\mexcooldowns\Mexcooldowns.class
+org\axc\mexcooldowns\Backend\SendMessageEvent.class
+org\axc\mexcooldowns\Backend\FormatManager.class
+org\axc\mexcooldowns\PluginUtils\Functions.class
+org\axc\mexcooldowns\Commands\reloadCommand.class
+org\axc\mexcooldowns\Backend\CooldownManager.class
