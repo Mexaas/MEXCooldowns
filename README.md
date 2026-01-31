@@ -2,7 +2,6 @@
 # MEXCooldowns
 [Discord](https://discord.gg/ezKDWxpkzh) • [VK](https://vk.com/mexaas) • [SpigotMC.ru](https://spigotmc.ru/members/mexaa_.79484/#about) • [SpigotMC.org](https://www.spigotmc.org/members/mexaa_.1196753/) • [Modrinth](https://modrinth.com/user/Mexaa_)
 
----
 MEXCooldowns is a **powerful and user-friendly plugin** for managing command cooldowns on your Minecraft server. It allows you to **easily create** and **configure cooldowns for any command,** as well as fully control their display and behavior for different player groups.
 
 Plugin supports:
