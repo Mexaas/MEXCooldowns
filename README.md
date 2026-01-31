@@ -15,7 +15,7 @@ Plugin supports:
 
 
 # ⬇️ Installation
-1. Download the latest version of MEXCooldowns from [Releases](https://github.com/Mexaas/MEXCooldowns/releases/tag/1.0.1) or [Modrinth](https://modrinth.com/plugin/mexcooldowns).
+1. Download the latest version of MEXCooldowns from [Releases](https://github.com/Mexaas/MEXCooldowns/releases/tag/1.0.1), [Modrinth](https://modrinth.com/plugin/mexcooldowns), [SpigotMC.ru](https://spigotmc.ru/resources/mexcooldowns-gibkie-kuldauny-komand-s-podderzhkoj-luckperms.4916/) or [SpigotMC.org](https://www.spigotmc.org/resources/%E2%8C%9B-mexcooldowns-%E2%80%94-flexible-command-cooldowns-with-luckperms-support-%E2%9A%99%EF%B8%8F.132108/)
 2. Place the downloaded JAR file into your server's `plugins` folder.
 3. Start or ` restart your server ` to generate the default configuration files.
 4. Customize the `config.yml` and `data.yml` files located in the `plugins/MEXCooldowns ` folder to suit your needs.
