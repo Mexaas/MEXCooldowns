@@ -7,6 +7,9 @@ target/
 .idea/
 *.iml
 .vscode/
+pom.xml
+dependency-reduced-pom.xml
+Mexcooldowns.iml
 
 # Logs
 *.log
