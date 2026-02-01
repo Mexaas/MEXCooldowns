@@ -1,26 +1,5 @@
 ###############################################################################################################
 #
-#
-#
-#
-#
-#
-#
-#
-#          Russian version                                          English version
-#
-#                            Plugin for creating command cooldowns
-#    LuckPerms,                      with LuckPerms support,
-#                          offering full configuration of the config file,
-#                                    formats, messages, and more
-#
-###############################################################################################################
-#
-#                                                 Permissions:
-#    mexcooldowns.reload  [        mexcooldowns.reload  [Plugin reload]
-#
-###############################################################################################################
-#
 #    Developer:      Mexaa_
 #    Github:         https://github.com/Mexaas
 #    Spigotmc.ru:    https://spigotmc.ru/members/mexaa_.79484/#about
@@ -28,7 +7,39 @@
 #    Modrinth:       https://modrinth.com/user/Mexaa_
 #
 ###############################################################################################################
-prefix: "&x&6&5&5&F&D&BMEXCooldowns &8&r"
+#
+#    Placeholders:
+#    %command% - The command on cooldown
+#    %time%    - The remaining time on the cooldown
+#
+#    Permissions:
+#    mexcooldowns.reload
+#
+###############################################################################################################
+#
+#          UPDATE 1.0.2                 <-------
+#
+#  - MiniMessages [<bold><red>Message ...]
+#  - Legacy formats [&a&lMessage ...]
+#  - ActionBar messages                   <- Turn off chat messages
+#  - More optimization
+#  - Fixed suspicious code
+#  - Warnings to optimize infinite duration of actionbars
+#
+###############################################################################################################
+
+###
+#    Formats:
+#
+#    MiniMessage
+#    Legacy
+###
+prefix: "<gradient:#7F5CFC:#7932BF><shadow:#280886:1>MEXCooldowns</shadow></gradient> <dark_gray>» "
+
+actionbar:
+  enabled: false  # Default value: false
+  message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
+  duration: 5     # Show duration of ActionBar
 
 format:
   seconds: "seconds"
@@ -37,12 +48,12 @@ format:
   days: "days"
 
 messages:
-  no-permission: "&fYou do &cnot have permission &fto use this &ccommand!&r"
-  reload-success: "&fPlugin was &areloaded!"
-  cooldown-active: "&fPlease wait &a%time% &fbefore using &a%command%&f!"
+  no-permission: "&x&D&1&C&3&E&9You do &x&E&F&4&7&4&7not have permission &x&D&1&C&3&E&9to use this &x&E&F&4&7&4&7command!&r"
+  reload-success: "&x&D&1&C&3&E&9Plugin was &x&3&D&D&B&6&8reloaded!"
+  cooldown-active: "&x&D&1&C&3&E&9Please wait &x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9before using &x&3&D&D&B&6&8%command%!"
 
 groups:
-  default:        #  Highest priority group name (LuckPerms support)
-    spawn: 10     #  command:seconds_cooldown (CMI commands doesn't work, please set command cooldown in CMI config)
-  admin:          #
-    bypass: true  # Bypass the cooldown
+  default:                     #  Highest priority group name (LuckPerms support)
+    any_plugin_command: 5      #  command:seconds_cooldown (CMI commands doesn't work, please set command cooldown in CMI config)
+  admin:                       #
+    bypass: true               # Bypass the cooldown

@@ -1,5 +1,5 @@
 name: MEXCooldowns
-version: '1.0.1'
+version: '1.0.2'
 main: org.axc.mexcooldowns.Mexcooldowns
 api-version: '1.16'
 depend:

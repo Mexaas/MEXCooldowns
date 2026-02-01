@@ -7,9 +7,6 @@ import org.axc.mexcooldowns.Backend.CooldownManager;
 import org.axc.mexcooldowns.Backend.SendMessageEvent;
 import org.axc.mexcooldowns.Commands.reloadCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Mexcooldowns extends JavaPlugin {
@@ -21,8 +18,8 @@ public final class Mexcooldowns extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        getCommand("mexc").setExecutor((CommandExecutor) new reloadCommand());
-        getServer().getPluginManager().registerEvents((Listener) new SendMessageEvent(), (Plugin) this);
+        getCommand("mexc").setExecutor(new reloadCommand());
+        getServer().getPluginManager().registerEvents(new SendMessageEvent(), this);
         saveResource("data.yml", false);
 
         CooldownManager.loadCooldownData();
