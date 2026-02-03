@@ -9,20 +9,12 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.axc.mexcooldowns.Mexcooldowns;
-import org.axc.mexcooldowns.MiniMessage.TextFormat;
-import org.axc.mexcooldowns.PluginUtils.Functions;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.axc.mexcooldowns.VersionAdapter.VersionAdapter;
+import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.scheduler.BukkitTask;
-
-import javax.swing.*;
-
-import static org.axc.mexcooldowns.Backend.ActionBarManager.getActionBarHash;
 
 public class SendMessageEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -30,6 +22,7 @@ public class SendMessageEvent implements Listener {
         if (!event.getMessage().startsWith("/")) {
             return;
         }
+        VersionAdapter adapter = VersionResolver.getAdapter();
         String baseValue = event.getMessage().trim()
                 .replaceFirst("^/+", "")
                 .split(" ")[0].toLowerCase();
@@ -60,7 +53,7 @@ public class SendMessageEvent implements Listener {
             if (Mexcooldowns.getInstance().getConfig().getInt("actionbar.duration") >= 31
             && Mexcooldowns.getInstance().getConfig().getBoolean("actionbar.enabled")) {
                 event.getPlayer().sendMessage(
-                        TextFormat.parseLegacy("&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar.duration must be <= &x&E&0&B&E&6&130"
+                        adapter.parseMessage("&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar.duration must be <= &x&E&0&B&E&6&130"
                         + "\n&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9This is &x&E&0&B&E&6&1MEXCooldowns config &x&D&1&C&3&E&9Warning"));
                 event.setCancelled(true);
                 return;
@@ -97,7 +90,7 @@ public class SendMessageEvent implements Listener {
                 return;
 
             } else if (((command.equals(fromMapName) && now < fromMapUse) && !Mexcooldowns.getInstance().getConfig().getBoolean("actionbar.enabled"))) {
-                event.getPlayer().sendMessage(TextFormat.parseHolders(
+                event.getPlayer().sendMessage(adapter.parseHoldersMessage(
                         Objects.requireNonNull(Mexcooldowns.getInstance().getConfig().getString("messages.cooldown-active")),
                         FormatManager.setTimeFormat(Math.round((float) (fromMapUse - now) / 1000.0)),
                         command

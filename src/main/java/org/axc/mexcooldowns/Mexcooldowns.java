@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.axc.mexcooldowns.Backend.CooldownManager;
 import org.axc.mexcooldowns.Backend.SendMessageEvent;
 import org.axc.mexcooldowns.Commands.reloadCommand;
+import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +22,9 @@ public final class Mexcooldowns extends JavaPlugin {
         getCommand("mexc").setExecutor(new reloadCommand());
         getServer().getPluginManager().registerEvents(new SendMessageEvent(), this);
         saveResource("data.yml", false);
+
+        // ServerVersion Resolver
+        VersionResolver.initVersion();
 
         CooldownManager.loadCooldownData();
         Bukkit.getScheduler().runTaskTimer(this, () -> {

@@ -1,13 +1,11 @@
 package org.axc.mexcooldowns.Backend;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.axc.mexcooldowns.Mexcooldowns;
-import org.axc.mexcooldowns.MiniMessage.TextFormat;
+import org.axc.mexcooldowns.VersionAdapter.VersionAdapter;
+import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +20,7 @@ public class ActionBarManager {
 
             actionBars.remove(user.getUniqueId());
         }
+        VersionAdapter adapter = VersionResolver.getAdapter();
         BukkitTask playerActionBar = new BukkitRunnable() {
             int duration = 0;
 
@@ -32,7 +31,7 @@ public class ActionBarManager {
                     cancel();
                     return;
                 }
-                user.sendActionBar(TextFormat.parseHolders(
+                user.sendActionBar(adapter.parseHoldersMessage(
                         message,
                         FormatManager.setTimeFormat(Math.round((float) (nextUse - now) / 1000.0)),
                         commandName
