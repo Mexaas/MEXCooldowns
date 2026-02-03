@@ -19,9 +19,9 @@
 #
 #          UPDATE 1.0.2                 <-------
 #
-#  - MiniMessages [<bold><red>Message ...]
-#  - Legacy formats [&a&lMessage ...]
-#  - ActionBar messages                   <- Turn off chat messages
+#  - MiniMessages [<bold><red>Message ...] [1.18+]
+#  - Legacy formats [&a&lMessage ...]      [1.16+]
+#  - ActionBar messages
 #  - More optimization
 #  - Fixed suspicious code
 #  - Warnings to optimize infinite duration of actionbars
@@ -31,10 +31,10 @@
 ###
 #    Formats:
 #
-#    MiniMessage
-#    Legacy
+#    MiniMessage [1.18+]
+#    Legacy [1.16+]
 ###
-prefix: "<gradient:#7F5CFC:#7932BF><shadow:#280886:1>MEXCooldowns</shadow></gradient> <dark_gray>» "
+prefix: "&#7855CBM&#7354CAE&#6E53CAX&#6853C9C&#6352C8o&#5E51C8o&#5950C7l&#544FC7d&#4F4EC6o&#494EC5w&#444DC5n&#3F4CC4 &8» &r"
 
 actionbar:
   enabled: false  # Default value: false
