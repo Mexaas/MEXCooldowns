@@ -34,11 +34,12 @@
 #    Legacy      [1.16+]   #
 #                          #
 ############################
-prefix: "&#7855CBM&#7354CAE&#6E53CAX&#6853C9C&#6352C8o&#5E51C8o&#5950C7l&#544FC7d&#4F4EC6o&#494EC5w&#444DC5n&#3F4CC4 &8» &r"
+
+prefix: "&#7855CBM&#7354CAE&#6E53CAX&#6853C9C&#6352C8o&#5E51C8o&#5950C7l&#544FC7d&#4F4EC6o&#494EC5w&#444DC5ns&#3F4CC4 &8» &r"
 
 actionbar:
   enabled: false  # Default value: false
-  message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
+  message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaiing for &x&3&D&D&B&6&8%command%&f!"
   duration: 5     # Show duration of ActionBar
 
 format:
