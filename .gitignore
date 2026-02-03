@@ -1,7 +1,5 @@
 target/
 build/
 .idea/
-*.iml
 .vscode/
 *.log
-*.xml
