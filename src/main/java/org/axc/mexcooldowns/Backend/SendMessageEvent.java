@@ -11,23 +11,40 @@ import net.luckperms.api.model.user.User;
 import org.axc.mexcooldowns.Mexcooldowns;
 import org.axc.mexcooldowns.VersionAdapter.VersionAdapter;
 import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class SendMessageEvent implements Listener {
+    //             OUTDATED CODE!!!!!
+    //             I'm refactoring 50% of code since 18.02.2026
+    //             Code optimization, New interfaces, Records and more
+
+    private final VersionAdapter adapter = VersionResolver.getAdapter();
+    private final ConfigValues configValues;
+    private final FileConfiguration config = Mexcooldowns.getInstance().getConfig();
+    public record ConfigValues(
+            String noPermissionMessage,
+            String reloadMessage,
+            String actionBarMessage,
+            String cooldownMessage,
+            ConfigurationSection actionbar
+    ) {}
+    public SendMessageEvent(ConfigValues configValues) {
+        this.configValues = configValues;
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMessage(PlayerCommandPreprocessEvent event) {
         if (!event.getMessage().startsWith("/")) {
             return;
         }
-        VersionAdapter adapter = VersionResolver.getAdapter();
-        String baseValue = event.getMessage().trim()
-                .replaceFirst("^/+", "")
-                .split(" ")[0].toLowerCase();
-        String command = baseValue.contains(":") ? baseValue.substring(baseValue.indexOf(":") + 1) : baseValue;
         long now = System.currentTimeMillis();
+        String baseValue = event.getMessage().trim().replaceFirst("^/+", "").split(" ")[0].toLowerCase();
+        String command = baseValue.contains(":") ? baseValue.substring(baseValue.indexOf(":") + 1) : baseValue;
 
         LuckPerms luckperms = LuckPermsProvider.get();
         Group highGroup = null;
@@ -42,73 +59,68 @@ public class SendMessageEvent implements Listener {
 
                 }
             }
-            String path = "groups." + highGroup.getName() + "." + command;
-            String pathBypass = "groups." + highGroup.getName() + ".bypass";
-            if (!Mexcooldowns.getInstance().getConfig().contains(path)) {
-                return;
-            }
-            if (Mexcooldowns.getInstance().getConfig().contains(pathBypass)) {
-                return;
-            }
-            if (Mexcooldowns.getInstance().getConfig().getInt("actionbar.duration") >= 31
-            && Mexcooldowns.getInstance().getConfig().getBoolean("actionbar.enabled")) {
-                event.getPlayer().sendMessage(
-                        adapter.parseMessage("&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar.duration must be <= &x&E&0&B&E&6&130"
-                        + "\n&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9This is &x&E&0&B&E&6&1MEXCooldowns config &x&D&1&C&3&E&9Warning"));
-                event.setCancelled(true);
-                return;
-            }
+            ///  Заметка для разработчика:
+            ///                             Начало рефактора
+            ///                             Добавить интеграцию через интерфейс
+            ///                             Реализация Notifier при запуске + изменение при /mexc reload
+            String groupPath = "groups." + highGroup.getName();
+            if (config.contains(groupPath + "." + command) || !config.contains(groupPath + ".bypass")) {
+                if (configValues.actionbar.getInt("duration") >= 31 && configValues.actionbar.getBoolean("enabled")) {
+                    event.getPlayer().sendMessage(
+                            adapter.parseMessage("&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar.duration must be <= &x&E&0&B&E&6&130"
+                                    + "\n&x&E&0&B&E&6&1WARNING:   &x&D&1&C&3&E&9This is &x&E&0&B&E&6&1MEXCooldowns config &x&D&1&C&3&E&9Warning"));
+                    event.setCancelled(true);
+                    return;
+                }
 
-            Long fromMapUse = 0L;
-            String fromMapName = null;
-            Map<UUID, Map<Long, String>> cooldowns = CooldownManager.getCooldownsInstance();
-            Map<Long, String> userInfo = cooldowns.get(event.getPlayer().getUniqueId());
-            if (userInfo != null) {
-                Iterator<Map.Entry<Long, String>> iterator = userInfo.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<Long, String> entry = iterator.next();
-                    if (!Mexcooldowns.getInstance().getConfig()
-                            .contains("groups." + highGroup.getName() + "." + entry.getValue())) {
-                        iterator.remove();
-                    }
-                    if (entry.getValue().equals(command)) {
-                        fromMapUse = entry.getKey(); fromMapName = entry.getValue();
-                        break;
+                Long fromMapUse = 0L;
+                String fromMapName = null;
+                Map<UUID, Map<Long, String>> cooldowns = CooldownManager.getCooldownsInstance();
+                Map<Long, String> userInfo = cooldowns.get(event.getPlayer().getUniqueId());
+                if (userInfo != null) {
+                    Iterator<Map.Entry<Long, String>> iterator = userInfo.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        Map.Entry<Long, String> entry = iterator.next();
+                        if (!Mexcooldowns.getInstance().getConfig()
+                                .contains("groups." + highGroup.getName() + "." + entry.getValue())) {
+                            iterator.remove();
+                        }
+                        if (entry.getValue().equals(command)) {
+                            fromMapUse = entry.getKey(); fromMapName = entry.getValue();
+                            break;
+                        }
                     }
                 }
-            }
-            int seconds = Mexcooldowns.getInstance().getConfig().getInt("groups." + highGroup.getName() + "." + command);
-            long nextUse = now + seconds * 1000L;
-            if ((command.equals(fromMapName) && now < fromMapUse) && Mexcooldowns.getInstance().getConfig().getBoolean("actionbar.enabled")) {
-                ActionBarManager.sendActionBarMessage(Mexcooldowns.getInstance().getConfig().getString(("actionbar.message")),
-                        event.getPlayer(),
-                        fromMapUse,
-                        fromMapName,
-                        Mexcooldowns.getInstance().getConfig().getInt("actionbar.duration")
-                );
-                event.setCancelled(true);
-                return;
+                int seconds = config.getInt(groupPath + "." + command); long nextUse = now + seconds * 1000L;
+                if ((command.equals(fromMapName) && now < fromMapUse) && config.getBoolean("actionbar.enabled")) {
+                    ActionBarManager.sendActionBarMessage(config.getString(("actionbar.message")),
+                            event.getPlayer(),
+                            fromMapUse,
+                            fromMapName,
+                            config.getInt("actionbar.duration")
+                    );
+                    event.setCancelled(true);
+                    return;
 
-            } else if (((command.equals(fromMapName) && now < fromMapUse) && !Mexcooldowns.getInstance().getConfig().getBoolean("actionbar.enabled"))) {
-                event.getPlayer().sendMessage(adapter.parseHoldersMessage(
-                        Objects.requireNonNull(Mexcooldowns.getInstance().getConfig().getString("messages.cooldown-active")),
-                        FormatManager.setTimeFormat(Math.round((float) (fromMapUse - now) / 1000.0)),
-                        command
-                ));
-                event.setCancelled(true);
-                return;
+                } else if (((command.equals(fromMapName) && now < fromMapUse) && !config.getBoolean("actionbar.enabled"))) {
+                    event.getPlayer().sendMessage(adapter.parseHoldersMessage(
+                            Objects.requireNonNull(config.getString("messages.cooldown-active")),
+                            FormatManager.setTimeFormat(Math.round((float) (fromMapUse - now) / 1000.0)),
+                            command
+                    ));
+                    event.setCancelled(true);
+                    return;
+                }
+                CooldownManager.addCooldownUser(event.getPlayer(), nextUse, command);
+                if (config.getBoolean("actionbar.enabled")) {
+                    ActionBarManager.sendActionBarMessage(config.getString("actionbar.message"),
+                            event.getPlayer(),
+                            nextUse,
+                            command,
+                            config.getInt("actionbar.duration")
+                    );
+                }
             }
-            CooldownManager.addCooldownUser(event.getPlayer(), nextUse, command);
-            if (Mexcooldowns.getInstance().getConfig().getBoolean("actionbar.enabled")) {
-                ActionBarManager.sendActionBarMessage(Mexcooldowns.getInstance().getConfig().getString("actionbar.message"),
-                        event.getPlayer(),
-                        nextUse,
-                        command,
-                        Mexcooldowns.getInstance().getConfig().getInt("actionbar.duration")
-                );
-            }
-        } else {
-            return;
         }
     }
 }

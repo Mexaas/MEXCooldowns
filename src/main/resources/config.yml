@@ -1,60 +1,60 @@
-###############################################################################################################
-#
-#    Developer:      Mexaa_
-#    Github:         https://github.com/Mexaas
-#    Spigotmc.ru:    https://spigotmc.ru/members/mexaa_.79484/#about
-#    Spigotmc.org:   https://www.spigotmc.org/members/mexaa_.1196753/
-#    Modrinth:       https://modrinth.com/user/Mexaa_
-#
-###############################################################################################################
-#
-#    Placeholders:
-#    %command% - The command on cooldown
-#    %time%    - The remaining time on the cooldown
-#
-#    Permissions:
-#    mexcooldowns.reload
-#
-###############################################################################################################
-#
-#          UPDATE 1.0.2                 <-------
-#
-#  - MiniMessages [<bold><red>Message ...]   [1.18+]
-#  - Legacy formats [&a&lMessage ...]        [1.16+]
-#  - ActionBar messages
-#  - More optimization
-#  - Fixed suspicious code
-#  - Warnings to optimize infinite duration of actionbars
-#
-############################
-#                          #
-#         Formats          #
-#                          #
-#    MiniMessage [1.18+]   #
-#    Legacy      [1.16+]   #
-#                          #
-############################
+#######
+##
+##    Plugin version: 1.0.3
+##    Devblog:
+##    1. The main plugin config has been updated to make it easier for beginners
+##    2. Refactoring the code for a more professional version
+##    3.
+##
+##    Developer:      Mexaa_
+##    Github:         https://github.com/Mexaas
+##    Spigotmc.ru:    https://spigotmc.ru/members/mexaa_.79484/#about
+##    Spigotmc.org:   https://www.spigotmc.org/members/mexaa_.1196753/
+##    Modrinth:       https://modrinth.com/user/Mexaa_
+##
+#######
 
+# Available serializers:
+#  LEGACY_AMPERSAND -> &aHello, World!
+#  LEGACY_SECTION -> §aHello, World!
+#  MINIMESSAGE -> <bold><red>Hello World</red></bold>
 prefix: "&#7855CBM&#7354CAE&#6E53CAX&#6853C9C&#6352C8o&#5E51C8o&#5950C7l&#544FC7d&#4F4EC6o&#494EC5w&#444DC5ns&#3F4CC4 &8» &r"
+messages:
+  # General pattern of actionbar message
+  # Supports plugin placeholders:
+  # %time% - remaining time to use command again
+  # %command% - blocked command name. Example: free
+  no-permission: "&x&D&1&C&3&E&9You do &x&E&F&4&7&4&7not have permission &x&D&1&C&3&E&9to use this &x&E&F&4&7&4&7command!&r"
+  reload-success: "&x&D&1&C&3&E&9Plugin was &x&3&D&D&B&6&8reloaded!"
+  cooldown-active: "&x&D&1&C&3&E&9Please wait &x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9before using &x&3&D&D&B&6&8%command%!"
+  actionbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
 
+# Enables the command delay notification in the ActionBar (above the player's slotbar). Disables chat messages
 actionbar:
-  enabled: false  # Default value: false
-  message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaiing for &x&3&D&D&B&6&8%command%&f!"
-  duration: 5     # Show duration of ActionBar
+  # Responsible for: whether the function is enabled or not. Can be false or true
+  enabled: false # or true
+  # This function controls the duration of the actionbar. display. It cannot be longer than 30
+  # The duration value is specified in SECONDS
+  duration: 5
 
+# Time display format. Can be replaced with any word as your imagination allows
 format:
+  # Display in seconds, minutes, hours, and days.
+  # Example: 32 available coffee remaining for /menu!
   seconds: "seconds"
   minutes: "minutes"
   hours: "hours"
   days: "days"
 
-messages:
-  no-permission: "&x&D&1&C&3&E&9You do &x&E&F&4&7&4&7not have permission &x&D&1&C&3&E&9to use this &x&E&F&4&7&4&7command!&r"
-  reload-success: "&x&D&1&C&3&E&9Plugin was &x&3&D&D&B&6&8reloaded!"
-  cooldown-active: "&x&D&1&C&3&E&9Please wait &x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9before using &x&3&D&D&B&6&8%command%!"
-
+# Basic settings. The plugin will search for command inputs by the specified group and command name, and apply a delay if a match is found
 groups:
-  default:                     #  Highest priority group name (LuckPerms support)
-    any_plugin_command: 5      #  command:seconds_cooldown (CMI commands doesn't work, please set command cooldown in CMI config)
-  admin:                       #
-    bypass: true               # Bypass the cooldown
+  # Lowercase group name from your LuckPerms
+  default:
+    # The name of the preferred command that you want to block
+    # Example:
+    # help: 10
+    any_plugin_command: 5
+  # An example of using the admin group
+  admin:
+    # The bypass setting has two modes: false or true. It is responsible for ignoring the delay for administrators
+    bypass: true # or false
