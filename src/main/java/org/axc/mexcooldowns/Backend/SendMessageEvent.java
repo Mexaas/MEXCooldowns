@@ -9,6 +9,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.axc.mexcooldowns.Mexcooldowns;
+import org.axc.mexcooldowns.Notifiers.CooldownNotifier;
 import org.axc.mexcooldowns.VersionAdapter.VersionAdapter;
 import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
 import org.bukkit.configuration.ConfigurationSection;
@@ -19,10 +20,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class SendMessageEvent implements Listener {
-    //             OUTDATED CODE!!!!!
-    //             I'm refactoring 50% of code since 18.02.2026
-    //             Code optimization, New interfaces, Records and more
-
     private final VersionAdapter adapter = VersionResolver.getAdapter();
     private final ConfigValues configValues;
     private final FileConfiguration config = Mexcooldowns.getInstance().getConfig();
@@ -59,10 +56,6 @@ public class SendMessageEvent implements Listener {
 
                 }
             }
-            ///  Заметка для разработчика:
-            ///                             Начало рефактора
-            ///                             Добавить интеграцию через интерфейс
-            ///                             Реализация Notifier при запуске + изменение при /mexc reload
             String groupPath = "groups." + highGroup.getName();
             if (config.contains(groupPath + "." + command) || !config.contains(groupPath + ".bypass")) {
                 if (configValues.actionbar.getInt("duration") >= 31 && configValues.actionbar.getBoolean("enabled")) {

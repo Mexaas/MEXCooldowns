@@ -28,12 +28,21 @@ messages:
   reload-success: "&x&D&1&C&3&E&9Plugin was &x&3&D&D&B&6&8reloaded!"
   cooldown-active: "&x&D&1&C&3&E&9Please wait &x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9before using &x&3&D&D&B&6&8%command%!"
   actionbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
+  bossbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
 
 # Enables the command delay notification in the ActionBar (above the player's slotbar). Disables chat messages
 actionbar:
   # Responsible for: whether the function is enabled or not. Can be false or true
   enabled: false # or true
-  # This function controls the duration of the actionbar. display. It cannot be longer than 30
+  # This function controls the duration of the ActionBar display. It cannot be longer than 30
+  # The duration value is specified in SECONDS
+  duration: 5
+
+# Enabled the command delay notification in the BossBar. Disables chat messages
+bossbar:
+  # Responsible for: whether the function is enabled or not. Can be false or true
+  enabled: false
+  # This function controls the duration of the BossBar display. It cannot be longer than 30
   # The duration value is specified in SECONDS
   duration: 5
 

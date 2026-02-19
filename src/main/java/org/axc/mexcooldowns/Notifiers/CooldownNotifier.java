@@ -1,5 +1,5 @@
 package org.axc.mexcooldowns.Notifiers;
 
 public interface CooldownNotifier {
-    notify
+    void sendNotification();
 }
