@@ -6,20 +6,15 @@ import java.util.UUID;
 import org.axc.mexcooldowns.Backend.CooldownManager;
 import org.axc.mexcooldowns.Backend.SendMessageEvent;
 import org.axc.mexcooldowns.Commands.reloadCommand;
-import org.axc.mexcooldowns.Notifiers.CooldownNotifier;
 import org.axc.mexcooldowns.Notifiers.NotifierResolver;
 import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Mexcooldowns extends JavaPlugin {
     public static Mexcooldowns instance;
 
-    public static Mexcooldowns plugin() {
-        return Mexcooldowns.getInstance();
-    }
     public static Mexcooldowns getInstance() {
         return instance;
     }
@@ -60,7 +55,9 @@ public final class Mexcooldowns extends JavaPlugin {
                 messagesSection.getString("reload-success"),
                 messagesSection.getString("actionbar-message"),
                 messagesSection.getString("cooldown-active"),
-                getConfig().getConfigurationSection("actionbar")
+                getConfig().getConfigurationSection("actionbar"),
+                messagesSection.getString("warning-message"),
+                getConfig().getConfigurationSection("bossbar")
         );
     }
 }
