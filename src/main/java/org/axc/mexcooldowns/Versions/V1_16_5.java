@@ -8,7 +8,7 @@ public class V1_16_5 implements VersionAdapter {
     LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacyAmpersand();
 
     @Override
-    public Component parseMessage(String text) {
+    public Component parseHoldersMessage(String text) {
         return LEGACY.deserialize(text);
     }
     @Override

@@ -11,14 +11,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class CooldownManager {
-    private static final Map<UUID, Map<Long, String>> cooldowns = new HashMap<>();
+    private static final Map<UUID, Map<String, Long>> cooldowns = new HashMap<>();
 
-    public static Map<UUID, Map<Long, String>> getCooldownsInstance() {
+    public static Map<UUID, Map<String, Long>> getCooldownsInstance() {
         return cooldowns;
     }
-    public static void addCooldownUser(Player player, Long nextUseAt, String command) {
+    public static void addCooldownUser(Player player, Long time, String command) {
         cooldowns.computeIfAbsent(player.getUniqueId(), id -> new HashMap<>())
-                .put(nextUseAt, command);
+                .put(command, time);
     }
 
     public static void saveCooldownData() {
@@ -26,13 +26,13 @@ public class CooldownManager {
         YamlConfiguration data = new YamlConfiguration();
         ConfigurationSection users = data.createSection("users");
 
-        for (Map.Entry<UUID, Map<Long, String>> entry : cooldowns.entrySet()) {
+        for (Map.Entry<UUID, Map<String, Long>> entry : cooldowns.entrySet()) {
             UUID uuid = entry.getKey();
-            ConfigurationSection cdSection = users.createSection(uuid.toString());
-            Map<Long, String> userInfo = entry.getValue();
+            ConfigurationSection cooldownsSection = users.createSection(uuid.toString());
+            Map<String, Long> userData = entry.getValue();
 
-            for (Map.Entry<Long, String> cd : userInfo.entrySet())
-                cdSection.set(String.valueOf(cd.getKey()), cd.getValue());
+            for (Map.Entry<String, Long> cd : userData.entrySet())
+                cooldownsSection.set(cd.getKey(), cd.getValue());
         }
         try {
             data.save(file);
@@ -44,23 +44,22 @@ public class CooldownManager {
         File file = new File(Mexcooldowns.getInstance().getDataFolder(), "data.yml");
         YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection usersSection = data.getConfigurationSection("users");
-        if (usersSection != null && !usersSection.getKeys(false).isEmpty()) {
-            for (String uuid : usersSection.getKeys(false)) {
-                long now = System.currentTimeMillis();
-                UUID userID = UUID.fromString(uuid);
-                ConfigurationSection cdSection = usersSection.getConfigurationSection(String.valueOf(userID));
 
-                Map<Long, String> hash = new HashMap<>();
-                if (cdSection != null && !cdSection.getKeys(false).isEmpty())
-                    for (String key : cdSection.getKeys(false)) {
-                        long nextUseAt = Long.parseLong(key);
-                        if (now >= nextUseAt)
+        if (usersSection != null && !usersSection.getKeys(false).isEmpty()) {
+            long now = System.currentTimeMillis();
+            for (String uuid : usersSection.getKeys(false)) {
+                UUID userID = UUID.fromString(uuid);
+                Map<String, Long> userCooldownsData = cooldowns.computeIfAbsent(userID, id -> new HashMap<>());
+                ConfigurationSection userYamlData = usersSection.getConfigurationSection(String.valueOf(userID));
+
+                if (userYamlData != null && !userYamlData.getKeys(false).isEmpty()) {
+                    for (String key : userYamlData.getKeys(false)) {
+                        long time = userYamlData.getLong(key);
+                        if (now >= time)
                             continue;
-                        String commandName = cdSection.getString(key);
-                        hash.put(nextUseAt, commandName);
+                        userCooldownsData.put(key, time);
                     }
-                if (!hash.isEmpty())
-                    cooldowns.put(userID, hash);
+                }
             }
         }
     }

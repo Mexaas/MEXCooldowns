@@ -30,6 +30,12 @@ messages:
   actionbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
   bossbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
   warning-message: "&x&E&0&B&E&6&1WARNING: &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar.duration must be <= &x&E&0&B&E&6&130"
+  help-message:
+    - "&7"
+    - "               &x&6&5&5&F&D&BM&x&6&7&5&F&D&6E&x&6&9&6&0&D&2X&x&6&B&6&0&C&DC&x&6&D&6&0&C&8o&x&6&F&6&1&C&3o&x&7&0&6&1&B&Fl&x&7&2&6&2&B&Ad&x&7&4&6&2&B&5o&x&7&6&6&2&B&0w&x&7&8&6&3&A&Cn&x&7&A&6&3&A&7s"
+    - "&7"
+    - "&7   /mexcooldowns reload &8[Plugin reload]"
+    - "&7"
 
 # Enables the command delay notification in the ActionBar (above the player's slotbar). Disables chat messages
 actionbar:

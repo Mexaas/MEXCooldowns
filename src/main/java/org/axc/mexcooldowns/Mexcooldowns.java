@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import org.axc.mexcooldowns.Backend.CooldownManager;
+import org.axc.mexcooldowns.Backend.FormatManager;
 import org.axc.mexcooldowns.Backend.SendMessageEvent;
 import org.axc.mexcooldowns.Commands.reloadCommand;
 import org.axc.mexcooldowns.Notifiers.NotifierResolver;
@@ -21,25 +22,26 @@ public final class Mexcooldowns extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        NotifierResolver.initNotifier();
 
-        getCommand("mexc").setExecutor(new reloadCommand());
-        getServer().getPluginManager().registerEvents(new SendMessageEvent(updateRecordConfig()), this);
+        getCommand("mexc").setExecutor(new reloadCommand(this));
+        getServer().getPluginManager().registerEvents(new SendMessageEvent(updateRecordConfig(), this), this);
         saveResource("data.yml", false);
         VersionResolver.initVersion();
         CooldownManager.loadCooldownData();
+        NotifierResolver.initNotifier();
+
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             long now = System.currentTimeMillis();
-            Map<UUID, Map<Long, String>> dataMap = CooldownManager.getCooldownsInstance();
+            Map<UUID, Map<String, Long>> dataMap = CooldownManager.getCooldownsInstance();
 
             for (UUID userID : new HashSet<>(dataMap.keySet())) {
-                Map<Long, String> CDs = dataMap.get(userID);
-                for (Long timestamp : new HashSet<>(CDs.keySet())) {
-                    if (timestamp < now) {
-                        CDs.remove(timestamp);
+                Map<String, Long> userData = dataMap.get(userID);
+                for (String key : new HashSet<>(userData.keySet())) {
+                    if (userData.get(key) < now) {
+                        userData.remove(key);
                     }
                 }
-                if (CDs.isEmpty()) {
+                if (userData.isEmpty()) {
                     dataMap.remove(userID);
                 }
             }
@@ -49,15 +51,10 @@ public final class Mexcooldowns extends JavaPlugin {
         CooldownManager.saveCooldownData();
     }
     public SendMessageEvent.ConfigValues updateRecordConfig() {
-        ConfigurationSection messagesSection = getConfig().getConfigurationSection("messages");
-        SendMessageEvent.ConfigValues configValues = new SendMessageEvent.ConfigValues(
-                messagesSection.getString("no-permission"),
-                messagesSection.getString("reload-success"),
-                messagesSection.getString("actionbar-message"),
-                messagesSection.getString("cooldown-active"),
+        return new SendMessageEvent.ConfigValues(
                 getConfig().getConfigurationSection("actionbar"),
-                messagesSection.getString("warning-message"),
-                getConfig().getConfigurationSection("bossbar")
+                getConfig().getConfigurationSection("bossbar"),
+                getConfig().getConfigurationSection("messages")
         );
     }
 }

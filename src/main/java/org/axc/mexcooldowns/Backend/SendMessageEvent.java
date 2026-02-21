@@ -2,14 +2,13 @@ package org.axc.mexcooldowns.Backend;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import org.axc.mexcooldowns.Mexcooldowns;
-import org.axc.mexcooldowns.Notifiers.CooldownNotifier;
+import org.axc.mexcooldowns.Notifiers.NotifierResolver;
 import org.axc.mexcooldowns.VersionAdapter.VersionAdapter;
 import org.axc.mexcooldowns.VersionAdapter.VersionResolver;
 import org.bukkit.configuration.ConfigurationSection;
@@ -20,21 +19,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class SendMessageEvent implements Listener {
+    private final Mexcooldowns plugin;
+    public SendMessageEvent(ConfigValues configValues, Mexcooldowns plugin) {
+        this.configValues = configValues;
+        this.plugin = plugin;
+    }
     private final VersionAdapter adapter = VersionResolver.getAdapter();
     private final ConfigValues configValues;
-    private final FileConfiguration config = Mexcooldowns.getInstance().getConfig();
     public record ConfigValues(
-            String noPermissionMessage,
-            String reloadMessage,
-            String actionBarMessage,
-            String cooldownMessage,
             ConfigurationSection actionbar,
-            String warningMessage,
-            ConfigurationSection bossbar
+            ConfigurationSection bossbar,
+            ConfigurationSection messages
     ) {}
-    public SendMessageEvent(ConfigValues configValues) {
-        this.configValues = configValues;
-    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMessage(PlayerCommandPreprocessEvent event) {
@@ -55,65 +51,33 @@ public class SendMessageEvent implements Listener {
                 if (weight > highestWeight) {
                     highGroup = group;
                     highestWeight = weight;
-
                 }
             }
+            FileConfiguration config = plugin.getConfig();
             String groupPath = "groups." + highGroup.getName();
             if (config.contains(groupPath + "." + command) || !config.contains(groupPath + ".bypass")) {
                 if (configValues.actionbar.getInt("duration") >= 31 || configValues.bossbar.getInt("duration") >= 31) {
-                    event.getPlayer().sendMessage(adapter.parseMessage(configValues.warningMessage));
+                    event.getPlayer().sendMessage(adapter.parseHoldersMessage(configValues.messages.getString("warning-message")));
                     event.setCancelled(true);
                     return;
                 }
-                Long fromMapUse = 0L;
-                String fromMapName = null;
-                Map<UUID, Map<Long, String>> cooldowns = CooldownManager.getCooldownsInstance();
-                Map<Long, String> userInfo = cooldowns.get(event.getPlayer().getUniqueId());
-                if (userInfo != null) {
-                    Iterator<Map.Entry<Long, String>> iterator = userInfo.entrySet().iterator();
-                    while (iterator.hasNext()) {
-                        Map.Entry<Long, String> entry = iterator.next();
-                        if (!config.contains("groups." + highGroup.getName() + "." + entry.getValue())) {
-                            iterator.remove();
-                        }
-                        if (entry.getValue().equals(command)) {
-                            fromMapUse = entry.getKey(); fromMapName = entry.getValue();
-                            break;
-                        }
-                    }
+                Long commandMapTime = 0L;
+                Map<String, Long> userData = CooldownManager.getCooldownsInstance().get(event.getPlayer().getUniqueId());
+                if (userData != null && userData.containsKey(command)) {
+                    commandMapTime = userData.get(command);
                 }
-                int seconds = config.getInt(groupPath + "." + command); long nextUse = now + seconds * 1000L;
-                if (command.equals(fromMapName) && now < fromMapUse) {
-                    // logic
-                }
-//                if ((command.equals(fromMapName) && now < fromMapUse) && config.getBoolean("actionbar.enabled")) {
-//                    ActionBarManager.sendActionBarMessage(config.getString(("actionbar.message")),
-//                            event.getPlayer(),
-//                            fromMapUse,
-//                            fromMapName,
-//                            config.getInt("actionbar.duration")
-//                    );
-//                    event.setCancelled(true);
-//                    return;
-//
-//                } else if (((command.equals(fromMapName) && now < fromMapUse) && !config.getBoolean("actionbar.enabled"))) {
-//                    event.getPlayer().sendMessage(adapter.parseHoldersMessage(
-//                            config.getString("messages.cooldown-active"),
-//                            FormatManager.setTimeFormat(Math.round((float) (fromMapUse - now) / 1000.0)),
-//                            command
-//                    ));
-//                    event.setCancelled(true);
-//                    return;
-//                }
-                CooldownManager.addCooldownUser(event.getPlayer(), nextUse, command);
-                if (config.getBoolean("actionbar.enabled")) {
-                    ActionBarManager.sendActionBarMessage(config.getString("actionbar.message"),
+                if (now < commandMapTime) {
+                    new NotifierResolver().sendNotification(
                             event.getPlayer(),
-                            nextUse,
-                            command,
-                            config.getInt("actionbar.duration")
+                            commandMapTime,
+                            command
                     );
+                    event.setCancelled(true);
+                    return;
                 }
+                int seconds = config.getInt(groupPath + "." + command);
+                long nextCommandUse = now + seconds * 1000L;
+                CooldownManager.addCooldownUser(event.getPlayer(), nextCommandUse, command);
             }
         }
     }
