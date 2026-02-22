@@ -6,7 +6,7 @@
 
     <groupId>mexcooldowns</groupId>
     <artifactId>Mexcooldowns</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.3 Release</version>
     <packaging>jar</packaging>
     <properties>
         <java.version>1.8</java.version>
