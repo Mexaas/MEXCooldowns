@@ -45,12 +45,6 @@ public class ActionBarNotifier implements CooldownNotifier {
                 duration++;
             }
         }.runTaskTimer(Mexcooldowns.getInstance(), 0L, 20L);
-        Map<UUID, BukkitTask> actionBarMap = getActionBarHash();
-
-        actionBarMap.put(user.getUniqueId(), playerActionBar);
-    }
-
-    public static Map<UUID, BukkitTask> getActionBarHash() {
-        return actionBars;
+        actionBars.put(user.getUniqueId(), playerActionBar);
     }
 }

@@ -4,7 +4,11 @@
 ##    Devblog:
 ##    1. The main plugin config has been updated to make it easier for beginners
 ##    2. Refactoring the code for a more professional version
-##    3.
+##    3. Added editing of messages such as: Warnings, Help messages and more
+##    4. NEW! Added a BossBar message system at the top of the screen
+##       you can change the bossbar settings at the bottom of the config
+##    5. More code optimization. Many old solutions were removed to optimize the plugin
+##    6.
 ##
 ##    Developer:      Mexaa_
 ##    Github:         https://github.com/Mexaas
@@ -29,7 +33,7 @@ messages:
   cooldown-active: "&x&D&1&C&3&E&9Please wait &x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9before using &x&3&D&D&B&6&8%command%!"
   actionbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
   bossbar-message: "&x&3&D&D&B&6&8%time% &x&D&1&C&3&E&9remaining for &x&3&D&D&B&6&8%command%&f!"
-  warning-message: "&x&E&0&B&E&6&1WARNING: &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar.duration must be <= &x&E&0&B&E&6&130"
+  warning-message: "&x&E&0&B&E&6&1WARNING: &x&D&1&C&3&E&9Value in &x&E&0&B&E&6&1actionbar or bossbar duration should be lower, than &x&E&0&B&E&6&131"
   help-message:
     - "&7"
     - "               &x&6&5&5&F&D&BM&x&6&7&5&F&D&6E&x&6&9&6&0&D&2X&x&6&B&6&0&C&DC&x&6&D&6&0&C&8o&x&6&F&6&1&C&3o&x&7&0&6&1&B&Fl&x&7&2&6&2&B&Ad&x&7&4&6&2&B&5o&x&7&6&6&2&B&0w&x&7&8&6&3&A&Cn&x&7&A&6&3&A&7s"

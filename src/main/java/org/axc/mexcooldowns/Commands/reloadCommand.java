@@ -1,6 +1,7 @@
 package org.axc.mexcooldowns.Commands;
 
 import net.kyori.adventure.text.Component;
+import org.axc.mexcooldowns.Backend.SendMessageEvent;
 import org.axc.mexcooldowns.Mexcooldowns;
 import org.axc.mexcooldowns.Notifiers.NotifierResolver;
 import org.axc.mexcooldowns.VersionAdapter.VersionAdapter;
@@ -28,9 +29,9 @@ public class reloadCommand implements CommandExecutor {
                 Component prefixComponent = adapter.parseHoldersMessage(plugin.getConfig().getString("prefix"));
                 if (player.isOp() || player.hasPermission("mexcooldowns.reload")) {
                     player.sendMessage(prefixComponent.append(adapter.parseHoldersMessage(messages.getString("reload-success"))));
-                    NotifierResolver.initNotifier();
-                    plugin.updateRecordConfig();
                     plugin.reloadConfig();
+
+                    NotifierResolver.initNotifier();
                     return true;
                 }
                 player.sendMessage(prefixComponent.append(adapter.parseHoldersMessage(messages.getString("no-permission"))));

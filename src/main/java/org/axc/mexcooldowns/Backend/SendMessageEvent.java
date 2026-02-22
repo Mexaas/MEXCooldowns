@@ -6,6 +6,7 @@ import java.util.UUID;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.model.user.User;
 import org.axc.mexcooldowns.Mexcooldowns;
 import org.axc.mexcooldowns.Notifiers.NotifierResolver;
@@ -20,17 +21,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class SendMessageEvent implements Listener {
     private final Mexcooldowns plugin;
-    public SendMessageEvent(ConfigValues configValues, Mexcooldowns plugin) {
-        this.configValues = configValues;
+    public SendMessageEvent(Mexcooldowns plugin) {
         this.plugin = plugin;
     }
-    private final VersionAdapter adapter = VersionResolver.getAdapter();
-    private final ConfigValues configValues;
-    public record ConfigValues(
-            ConfigurationSection actionbar,
-            ConfigurationSection bossbar,
-            ConfigurationSection messages
-    ) {}
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onMessage(PlayerCommandPreprocessEvent event) {
@@ -38,6 +31,7 @@ public class SendMessageEvent implements Listener {
             return;
         }
         long now = System.currentTimeMillis();
+        FileConfiguration config = plugin.getConfig();
         String baseValue = event.getMessage().trim().replaceFirst("^/+", "").split(" ")[0].toLowerCase();
         String command = baseValue.contains(":") ? baseValue.substring(baseValue.indexOf(":") + 1) : baseValue;
 
@@ -53,11 +47,16 @@ public class SendMessageEvent implements Listener {
                     highestWeight = weight;
                 }
             }
-            FileConfiguration config = plugin.getConfig();
+            final VersionAdapter adapter = VersionResolver.getAdapter();
+
+            ConfigurationSection actionbar = config.getConfigurationSection("actionbar");
+            ConfigurationSection bossbar = config.getConfigurationSection("bossbar");
+            ConfigurationSection messages = config.getConfigurationSection("messages");
+
             String groupPath = "groups." + highGroup.getName();
-            if (config.contains(groupPath + "." + command) || !config.contains(groupPath + ".bypass")) {
-                if (configValues.actionbar.getInt("duration") >= 31 || configValues.bossbar.getInt("duration") >= 31) {
-                    event.getPlayer().sendMessage(adapter.parseHoldersMessage(configValues.messages.getString("warning-message")));
+            if (config.contains(groupPath + "." + command) && !config.contains(groupPath + ".bypass")) {
+                if (actionbar.getInt("duration") >= 31 || bossbar.getInt("duration") >= 31) {
+                    event.getPlayer().sendMessage(adapter.parseHoldersMessage(messages.getString("warning-message")));
                     event.setCancelled(true);
                     return;
                 }

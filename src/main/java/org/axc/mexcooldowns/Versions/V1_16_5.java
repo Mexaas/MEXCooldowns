@@ -12,11 +12,6 @@ public class V1_16_5 implements VersionAdapter {
         return LEGACY.deserialize(text);
     }
     @Override
-    public Component parseHoldersMessage(String text, long value, String command) {
-        String parsed = text.replace("%time%", String.valueOf(value)).replace("%command%", command);
-        return LEGACY.deserialize(parsed);
-    }
-    @Override
     public Component parseHoldersMessage(String text, String value, String command) {
         String parsed = text.replace("%time%", String.valueOf(value)).replace("%command%", command);
         return LEGACY.deserialize(parsed);

@@ -24,7 +24,7 @@ public final class Mexcooldowns extends JavaPlugin {
         saveDefaultConfig();
 
         getCommand("mexc").setExecutor(new reloadCommand(this));
-        getServer().getPluginManager().registerEvents(new SendMessageEvent(updateRecordConfig(), this), this);
+        getServer().getPluginManager().registerEvents(new SendMessageEvent(this), this);
         saveResource("data.yml", false);
         VersionResolver.initVersion();
         CooldownManager.loadCooldownData();
@@ -49,12 +49,5 @@ public final class Mexcooldowns extends JavaPlugin {
     }
     public void onDisable() {
         CooldownManager.saveCooldownData();
-    }
-    public SendMessageEvent.ConfigValues updateRecordConfig() {
-        return new SendMessageEvent.ConfigValues(
-                getConfig().getConfigurationSection("actionbar"),
-                getConfig().getConfigurationSection("bossbar"),
-                getConfig().getConfigurationSection("messages")
-        );
     }
 }
