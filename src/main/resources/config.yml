@@ -18,9 +18,9 @@
 #######
 
 # Available serializers:
-#  LEGACY_AMPERSAND -> &aHello, World!
-#  LEGACY_SECTION -> §aHello, World!
-#  MINIMESSAGE -> <bold><red>Hello World</red></bold>
+#  LEGACY_AMPERSAND -> &aHello, World!                  1.16.5 +
+#  LEGACY_SECTION -> §aHello, World!                    1.16.5 +
+#  MINIMESSAGE -> <bold><red>Hello World</red></bold>   1.18   +
 prefix: "&#7855CBM&#7354CAE&#6E53CAX&#6853C9C&#6352C8o&#5E51C8o&#5950C7l&#544FC7d&#4F4EC6o&#494EC5w&#444DC5ns&#3F4CC4 &8» &r"
 messages:
   # General pattern of actionbar message
